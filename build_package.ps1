@@ -24,11 +24,11 @@ Write-Host "TotalGram $version"
 # Entries are written under "## Unreleased"; the version is only known here.
 $changelog = Join-Path $root 'TotalGram\CHANGELOG.md'
 $text = [System.IO.File]::ReadAllText($changelog)
-if ($text -match '(?m)^## Unreleased[ \t]*$') {
-    $text = $text -replace '(?m)^## Unreleased[ \t]*$', "## $version"
+if ($text -match '(?m)^## Unreleased[ \t]*(?=\r?$)') {
+    $text = $text -replace '(?m)^## Unreleased[ \t]*(?=\r?$)', "## $version"
     [System.IO.File]::WriteAllText($changelog, $text, (New-Object System.Text.UTF8Encoding $false))
     Write-Host "changelog: Unreleased -> $version"
-} elseif ($text -notmatch ('(?m)^## ' + [regex]::Escape($version) + '$')) {
+} elseif ($text -notmatch ('(?m)^## ' + [regex]::Escape($version) + '[ \t]*(?=\r?$)')) {
     Write-Warning "CHANGELOG.md has no '## Unreleased' section: this build is not described in it"
 }
 
