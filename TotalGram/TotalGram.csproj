@@ -1,0 +1,77 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <UseWindows>true</UseWindows>
+
+    <!-- Total Commander shows the plugin's own icon resource in the plugin list -->
+    <ApplicationIcon>TotalGram.ico</ApplicationIcon>
+
+    <!-- Native AOT exports (WFX plugin) -->
+    <PublishAot>true</PublishAot>
+    <AotMsQuicAvailable>false</AotMsQuicAvailable>
+    <NativeLib>Shared</NativeLib>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <StripSymbols>true</StripSymbols>
+
+    <!-- Принудительно задаем минимальную целевую платформу (Windows 7/10 Win32) -->
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+
+    <!-- Отключаем подтягивание неприменимых системных библиотек -->
+    <EventSourceSupport>false</EventSourceSupport>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+
+    <!-- Не создавать фоновый GC-поток при старте рантайма (NativeAOT thread-from-DllMain issues) -->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Перенаправляем базовые функции на классические DLL вместо API Sets -->
+    <DirectPInvoke Include="kernel32.dll" />
+    <DirectPInvoke Include="advapi32.dll" />
+    <DirectPInvoke Include="bcrypt.dll" />
+    <DirectPInvoke Include="crypt32.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WTelegramClient" Version="4.4.8" />
+    <!-- Session state and TL objects are (de)serialized reflectively; keep their metadata -->
+    <TrimmerRootAssembly Include="WTelegramClient" />
+  </ItemGroup>
+
+  <!-- Fix x86 stdcall export decoration by patching generated .def file -->
+  <Target Name="PatchDefFileForX86"
+          Condition="'$(RuntimeIdentifier)' == 'win-x86'"
+          BeforeTargets="LinkNative"
+          AfterTargets="IlcGenerateCompleteProgram">
+    <PropertyGroup>
+      <GeneratedDefFile>$(IntermediateOutputPath)native/$(AssemblyName).def</GeneratedDefFile>
+      <DefFileContent>EXPORTS
+  DotNetRuntimeDebugHeader DATA
+  FsInit = TotalGram_TotalGram_Wfx_Exports__FsInit
+  FsSetDefaultParams = TotalGram_TotalGram_Wfx_Exports__FsSetDefaultParams
+  FsGetDefRootName = TotalGram_TotalGram_Wfx_Exports__FsGetDefRootName
+  FsFindFirstW = TotalGram_TotalGram_Wfx_Exports__FsFindFirstW
+  FsFindNextW = TotalGram_TotalGram_Wfx_Exports__FsFindNextW
+  FsFindFirst = TotalGram_TotalGram_Wfx_Exports__FsFindFirst
+  FsFindNext = TotalGram_TotalGram_Wfx_Exports__FsFindNext
+  FsFindClose = TotalGram_TotalGram_Wfx_Exports__FsFindClose
+  FsGetBackgroundFlags = TotalGram_TotalGram_Wfx_Exports__FsGetBackgroundFlags
+  FsDisconnect = TotalGram_TotalGram_Wfx_Exports__FsDisconnect
+  FsGetFileW = TotalGram_TotalGram_Wfx_Exports__FsGetFileW
+  FsPutFileW = TotalGram_TotalGram_Wfx_Exports__FsPutFileW
+  FsExecuteFileW = TotalGram_TotalGram_Wfx_Exports__FsExecuteFileW
+  FsGetLocalNameW = TotalGram_TotalGram_Wfx_Exports__FsGetLocalNameW
+  FsGetPreviewBitmapW = TotalGram_TotalGram_Wfx_Exports__FsGetPreviewBitmapW
+  FsGetPreviewBitmap = TotalGram_TotalGram_Wfx_Exports__FsGetPreviewBitmap
+</DefFileContent>
+    </PropertyGroup>
+    <Message Text="Patching .def file: $(GeneratedDefFile)" Importance="high" />
+    <WriteLinesToFile File="$(GeneratedDefFile)" Lines="$(DefFileContent)" Overwrite="true" Condition="Exists('$(GeneratedDefFile)')" />
+  </Target>
+</Project>

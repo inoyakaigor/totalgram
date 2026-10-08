@@ -1,0 +1,8 @@
+# build output
+bin/
+obj/
+publish/
+*.obj
+
+# packaged releases: rebuilt by build_package.ps1
+dist/
