@@ -1,8 +1,65 @@
-# build output
-bin/
-obj/
+# ---- build output ----
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
 publish/
-*.obj
+[Ll]og/
+[Ll]ogs/
+artifacts/
 
-# packaged releases: rebuilt by build_package.ps1
+# ---- packaged releases: rebuilt by build_package.ps1 ----
 dist/
+
+# ---- native and intermediate build artefacts ----
+*.obj
+*.iobj
+*.ipdb
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.pch
+*.tlog
+*.cache
+*.log
+*.tmp
+
+# ---- IDE and editor ----
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.sln.docstates
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# ---- NuGet ----
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# ---- tests and coverage ----
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# ---- publish profiles ----
+PublishScripts/
+*.pubxml.user
+*.azurePubxml
+
+# ---- OS clutter ----
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
