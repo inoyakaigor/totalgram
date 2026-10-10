@@ -55,7 +55,10 @@ New-Item -ItemType Directory -Path $stageDir -Force | Out-Null
 # a 64-bit plugin must sit next to the 32-bit one under the same name plus "64"
 Copy-Item $nativeX86 (Join-Path $stageDir 'TotalGram.wfx')
 Copy-Item $nativeX64 (Join-Path $stageDir 'TotalGram.wfx64')
-Copy-Item (Join-Path $root 'TotalGram\README.md') (Join-Path $stageDir 'README.md')
+# the README is the one the repository shows; logo.png goes with it so the
+# picture at the top is not a dead link inside the package
+Copy-Item (Join-Path $root 'README.md') (Join-Path $stageDir 'README.md')
+Copy-Item (Join-Path $root 'logo.png') (Join-Path $stageDir 'logo.png')
 Copy-Item (Join-Path $root 'TotalGram\CHANGELOG.md') (Join-Path $stageDir 'CHANGELOG.md')
 
 $inf = @"
