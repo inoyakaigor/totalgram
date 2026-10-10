@@ -63,3 +63,7 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+
+# ---- kept on this machine, out of the repository ----
+archive/
+улучшения.txt
