@@ -1,5 +1,7 @@
 # TotalGram
 
+<img src="logo.png" alt="" width="180">
+
 Плагин файловой системы (WFX) для Total Commander: чаты Telegram видны как папки,
 файлы из них скачиваются и загружаются обратно обычными F5/F6.
 
